@@ -1,3 +1,4 @@
+import logging
 """
 Django settings for ebdjango project.
 
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -124,16 +126,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-
-# Custom Settings 
+# Custom Settings
 
 # import the logging library
-import logging
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 STATIC_ROOT = 'static'
+
 
 def is_ec2_linux():
     """Detect if we are running on an EC2 Linux Instance
@@ -144,6 +145,8 @@ def is_ec2_linux():
             uuid = f.read()
             return uuid.startswith("ec2")
     return False
+
+
 def get_linux_ec2_private_ip():
     """Get the private IP Address of the machine if running on an EC2 linux server"""
     import requests
@@ -151,12 +154,14 @@ def get_linux_ec2_private_ip():
         return None
     try:
         ip = requests.get(
-          'http://169.254.169.254/latest/meta-data/local-ipv4',
-          timeout=0.01
+            'http://169.254.169.254/latest/meta-data/local-ipv4',
+            timeout=0.01
         ).text
     except requests.exceptions.ConnectionError:
         return None
-    return ip  
+    return ip
+
+
 # ElasticBeanstalk healthcheck sends requests with host header = internal ip
 # So we detect if we are in elastic beanstalk,
 # and add the instances private ip address
