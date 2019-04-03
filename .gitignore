@@ -6,3 +6,11 @@
 
 *.pyc
 static/
+
+.venv/
+venv/
+
+.vscode/
+.idea/
+
+db.sqlite3
